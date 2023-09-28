@@ -4,6 +4,7 @@
 
 .form-control-container {
     position: relative;
+    margin: 1em;
 }
 
 .save-button {
