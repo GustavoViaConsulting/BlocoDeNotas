@@ -10,7 +10,7 @@
         consultarObjetoDeRegistroPorTipo: function (baseUrl) {
           var deferred = $q.defer();
           let options = {
-            url: baseUrl + "/api/sunshine/objects/records?type=blocodenotas2",
+            url: baseUrl + "/api/sunshine/objects/records?type=blocodenotas",
             type: "GET",
             contentType: "application/json",
           };
@@ -29,7 +29,7 @@
           var deferred = $q.defer();
           var dataObjetoDeRegistroPorTipo = {
             data: {
-              type: "blocodenotas40",
+              type: "blocodenotas",
               attributes: {
                 dados: "",
               },
@@ -63,7 +63,7 @@
               baseUrl +
               "/api/sunshine/objects/records/zen:user:" +
               idUsuario +
-              "/related/user_nota40",
+              "/related/user_nota",
             type: "GET",
             contentType: "application/json",
           };
@@ -85,7 +85,7 @@
         ) {
           var dataObjetoDeRegistro = {
             data: {
-              relationship_type: "user_nota40",
+              relationship_type: "user_nota",
               source: "zen:user:" + idUsuario,
               target: idObjetoDeRegistro
             }
@@ -93,7 +93,7 @@
 
           var deferred = $q.defer();
           let options = {
-            url: baseUrl + "/api/sunshine/relationships/records?type=user_nota40",
+            url: baseUrl + "/api/sunshine/relationships/records?type=user_nota",
             type: "POST",
             contentType: "application/json",
             data: JSON.stringify(dataObjetoDeRegistro),
@@ -144,7 +144,7 @@
         consultarObjetoDeTipo: function (baseUrl) {
           var deferred = $q.defer();
           let options = {
-            url: baseUrl + "/api/sunshine/objects/types/blocodenotas40",
+            url: baseUrl + "/api/sunshine/objects/types/blocodenotas",
             type: "GET",
             contentType: "application/json",
           };
@@ -163,7 +163,7 @@
           var deferred = $q.defer();
           var dataObjetoDeTipo = {
             data: {
-              key: "blocodenotas40",
+              key: "blocodenotas",
               schema: {
                 properties: {
                   dados: {
@@ -195,7 +195,7 @@
         consultarTipoDeRelacionamento: function (baseUrl) {
           var deferred = $q.defer();
           let options = {
-            url: baseUrl + "/api/sunshine/relationships/types/user_nota40",
+            url: baseUrl + "/api/sunshine/relationships/types/user_nota",
             type: "GET",
             contentType: "application/json",
           };
@@ -214,9 +214,9 @@
           var deferred = $q.defer();
           var dataTipoDeRelacionamento = {
             data: {
-              key: "user_nota40",
+              key: "user_nota",
               source: "zen:user",
-              target: "blocodenotas40",
+              target: "blocodenotas",
             },
           };
 
