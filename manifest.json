@@ -1,0 +1,32 @@
+{
+  "name": "Bloco De Notas",
+  "author": {
+    "name": "Via Consulting",
+    "email": "gustavo.alves@viaconsulting.com.br"
+  },
+  "defaultLocale": "en",
+  "private": true,
+  "location": {
+    "support": {
+      "top_bar": {
+        "url": "assets/views/iframe.html",
+        "flexible": true
+      }
+    }
+  },
+  "version": "1.0.0",
+  "frameworkVersion": "2.0",
+  "parameters": [
+    {
+      "name": "baseUrl",
+      "type": "text",
+      "default": "https://YYY.YYYY.com.br"
+    },
+    {
+      "name": "userId",
+      "type": "text",
+      "secure": true,
+      "default": "XXXXXXXXXXXXXXX"
+    }
+  ]
+}

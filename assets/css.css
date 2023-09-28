@@ -1,0 +1,15 @@
+#box {
+    height: auto;
+}
+
+.form-control-container {
+    position: relative;
+}
+
+.save-button {
+    position: absolute;
+    bottom: 5px;
+    right: 22px;
+    border-radius: 20px !important;
+    /* margin-top: 10px; */
+}
