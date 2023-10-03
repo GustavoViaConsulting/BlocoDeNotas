@@ -9,95 +9,96 @@ blocoDeNotas.controller("blocoDeNotas", [
 
     $scope.dados;
 
+    var errors = {
+      criarObjetoDeTipo: "Erro ao criar um objeto",
+      criarTipoDeRelacionamento: "Erri ao criar relacionamento",
+      criarObjetoDeRegistroPorTipo: "Erro ao criar relacionamento por tipo",
+      criarObjetoDeRegistro: "Erro ao criar objeto de registro",
+      atualizarObjetoDeRegistro: "Erro ao atualizar o bloco de notas",
+    };
+
+    var success = {
+      atualizarBlocoDeNotas: "Bloco de notas atualizado!",
+      criarObjetoDeRegistro: "Novo bloco de notas criado com sucesso",
+    };
+
     cliente.metadata().then(function (parameters) {
       baseUrl = parameters.settings.baseUrl;
       idUsuario = parameters.settings.userId;
+      nomeRelacionamento = parameters.settings.nomeRelacionamento;
+      nomeTipoObjeto = parameters.settings.nomeTipoObjeto;
 
-      if (baseUrl && idUsuario) {
+      if (baseUrl && idUsuario && nomeRelacionamento && nomeTipoObjeto) {
         consultarBlocoDeNotas();
       }
     });
 
     function consultarBlocoDeNotas() {
       sunshineService
-        .consultarObjetoDeRegistroPorRelacionamento(baseUrl, idUsuario)
+        .consultarObjetoDeRegistroPorRelacionamento(
+          baseUrl,
+          idUsuario,
+          nomeRelacionamento
+        )
         .then(function ({ data }) {
           idObjetoDeRegistro = data[0].id;
           $scope.dados = data[0].attributes.dados;
         })
         .catch(function (error) {
-          criarObjetoDeTipo(baseUrl, function (resultado) {
-            if (resultado) {
-              criarTipoDeRelacionamento(baseUrl, function (resultado) {
-                if (resultado) {
-                  criarObjetoDeRegistroPorTipo(baseUrl, function (resultado) {
-                    if (resultado) {
-                      console.log(idObjetoDeRegistro);
-                      criarObjetoDeRegistro(
-                        baseUrl,
-                        idObjetoDeRegistro,
-                        idUsuario,
-                        function (resultado) {
-                          if (resultado) {
-                            console.log("Criado com sucesso!");
-                          } else {
-                            console.log("Erro ao criar Objeto de Registro");
-                          }
-                        }
-                      );
-                    } else {
-                      console.log("Erro ao crir Objeto de Registro por Tipo");
-                    }
-                  });
-                } else {
-                  console.log(
-                    "Consulte a aba de adminitração/Relacionamentos e exclua o relacionamento 'user_nota' para dar continuidade."
-                  );
-                }
-              });
-            } else {
-              console.log(
-                "Consulte a aba de adminitração/Objetos legados e exclua o objeto 'blocodenotas' para dar continuidade."
-              );
-            }
-          });
+          console.log(error);
+          if (error.status == 404) {
+            criarObjetoDeTipo(baseUrl, nomeTipoObjeto);
+          }
         });
     }
 
-    function criarObjetoDeTipo(baseUrl, callback) {
+    function criarObjetoDeTipo(baseUrl, nomeTipoObjeto) {
       sunshineService
-        .criarObjetoDeTipo(baseUrl)
+        .criarObjetoDeTipo(baseUrl, nomeTipoObjeto)
         .then(function (dados) {
-          callback(true);
+          criarTipoDeRelacionamento(
+            baseUrl,
+            nomeRelacionamento,
+            nomeTipoObjeto
+          );
         })
         .catch(function (error) {
           console.log(error);
-          callback(false);
+          mensagem(errors.criarObjetoDeTipo, "error");
         });
     }
 
-    function criarTipoDeRelacionamento(baseUrl, callback) {
+    function criarTipoDeRelacionamento(
+      baseUrl,
+      nomeRelacionamento,
+      nomeTipoObjeto
+    ) {
       sunshineService
-        .criarTipoDeRelacionamento(baseUrl)
+        .criarTipoDeRelacionamento(baseUrl, nomeRelacionamento, nomeTipoObjeto)
         .then(function (dados) {
-          callback(true);
+          criarObjetoDeRegistroPorTipo(baseUrl, nomeTipoObjeto);
         })
         .catch(function (error) {
           console.log(error);
-          callback(false);
+          mensagem(errors.criarTipoDeRelacionamento, "error");
         });
     }
 
-    function criarObjetoDeRegistroPorTipo(baseUrl, callback) {
+    function criarObjetoDeRegistroPorTipo(baseUrl, nomeTipoObjeto) {
       sunshineService
-        .criarObjetoDeRegistroPorTipo(baseUrl)
+        .criarObjetoDeRegistroPorTipo(baseUrl, nomeTipoObjeto)
         .then(function ({ data }) {
           idObjetoDeRegistro = data.id;
-          callback(true);
+          criarObjetoDeRegistro(
+            baseUrl,
+            idObjetoDeRegistro,
+            idUsuario,
+            nomeRelacionamento
+          );
         })
         .catch(function (error) {
           console.log(error);
-          callback(false);
+          mensagem(errors.criarObjetoDeRegistroPorTipo, "error");
         });
     }
 
@@ -105,16 +106,21 @@ blocoDeNotas.controller("blocoDeNotas", [
       baseUrl,
       idObjetoDeRegistro,
       idUsuario,
-      callback
+      nomeRelacionamento
     ) {
       sunshineService
-        .criarObjetoDeRegistro(baseUrl, idObjetoDeRegistro, idUsuario)
+        .criarObjetoDeRegistro(
+          baseUrl,
+          idObjetoDeRegistro,
+          idUsuario,
+          nomeRelacionamento
+        )
         .then(function (data) {
-          callback(true);
+          mensagem(success.criarObjetoDeRegistro, "success");
         })
         .catch(function (error) {
           console.log(error);
-          callback(false);
+          mensagem(errors.criarObjetoDeRegistro, "error");
         });
     }
 
@@ -122,10 +128,16 @@ blocoDeNotas.controller("blocoDeNotas", [
       sunshineService
         .atualizarObjetoDeRegistro(baseUrl, idObjetoDeRegistro, $scope.dados)
         .then(function (data) {
+          mensagem(success.atualizarBlocoDeNotas, "success");
         })
         .catch(function (error) {
           console.log(error);
+          mensagem(errors.atualizarObjetoDeRegistro, "error");
         });
     };
+
+    function mensagem(mensagem, tipo) {
+      cliente.invoke("notify", "<b>" + mensagem + "</b>", tipo, 3000);
+    }
   },
 ]);
