@@ -27,6 +27,16 @@
       "type": "text",
       "secure": true,
       "default": "XXXXXXXXXXXXXXX"
+    },
+    {
+      "name": "nomeRelacionamento",
+      "type": "text",
+      "default": "user_nota"
+    },
+    {
+      "name": "nomeTipoObjeto",
+      "type": "text",
+      "default": "blocodenotas"
     }
   ]
 }
